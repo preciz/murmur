@@ -22,7 +22,7 @@ When you are done, run `mix deps.get` in your shell to fetch and compile Murmur.
 
 # Examples
 
-```iex
+```elixir
 iex> Murmur.hash_x86_32("b2622f5e1310a0aa14b7f957fe4246fa", 2147368987)
 3297211900
 
