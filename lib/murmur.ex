@@ -16,7 +16,7 @@ defmodule Murmur do
 
   """
 
-  use Bitwise
+  import Bitwise
 
   # murmur constants
 
