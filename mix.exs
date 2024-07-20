@@ -6,7 +6,7 @@ defmodule Murmur.Mixfile do
 
   It aims to implement the x86_32bit, x86_128bit and x64_128bit variants.
   """
-  @github "https://github.com/gmcabrita/murmur"
+  @github "https://github.com/preciz/murmur"
 
   def project() do
     [
@@ -15,21 +15,14 @@ defmodule Murmur.Mixfile do
       source_url: @github,
       homepage_url: nil,
       version: "1.0.3",
-      elixir: "~> 1.6",
+      elixir: "~> 1.13",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       description: @description,
       package: package(),
       deps: deps(),
       aliases: aliases(),
-      preferred_cli_env: [
-        ci: :test
-      ],
-      test_coverage: [tool: ExCoveralls],
       docs: docs(),
-      dialyzer_ignored_warnings: [
-        {:warn_contract_supertype, :_, {:extra_range, [:_, :__protocol__, 1, :_, :_]}}
-      ]
     ]
   end
 
@@ -48,7 +41,7 @@ defmodule Murmur.Mixfile do
   defp package() do
     [
       files: ["lib", "mix.exs", "README.md", "LICENSE"],
-      maintainers: ["Gonçalo Cabrita"],
+      maintainers: ["Barna Kovacs", "Gonçalo Cabrita"],
       licenses: ["MIT"],
       links: %{"GitHub" => @github}
     ]
@@ -56,9 +49,7 @@ defmodule Murmur.Mixfile do
 
   defp deps() do
     [
-      {:excoveralls, "~> 0.10", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.16", only: [:dev, :docs], runtime: false},
-      {:dialyzex, "~> 1.3.0", only: [:dev, :test], runtime: false}
+      {:ex_doc, "~> 0.34", only: [:dev, :docs], runtime: false},
     ]
   end
 
@@ -67,7 +58,6 @@ defmodule Murmur.Mixfile do
       ci: [
         "format --check-formatted",
         "test",
-        "dialyzer"
       ]
     ]
   end
