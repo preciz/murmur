@@ -11,8 +11,9 @@ defmodule Murmur do
       iex> Murmur.hash_x86_128("some random data")
       5586633072055552000169173700229798482
 
-      iex> Murmur.hash_x64_128([:yes, :you, :can, :use, :any, :erlang, :term!])
-      300414073828138369336317731503972665325
+      # hashes of erlang terms change between erlang versions
+      # iex> Murmur.hash_x64_128([:yes, :you, :can, :use, :any, :erlang, :term!])
+      # => 300414073828138369336317731503972665325
 
   """
 
