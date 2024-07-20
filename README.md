@@ -1,7 +1,7 @@
 Murmur
 ======
 
-[![Hex docs](http://img.shields.io/badge/hex.pm-docs-green.svg?style=flat)](https://hexdocs.pm/murmur)
+![Actions Status](https://github.com/preciz/murmur/workflows/test/badge.svg)
 
 Murmur is a pure Elixir implementation of the non-cryptographic hash [Murmur3](https://code.google.com/p/smhasher/wiki/MurmurHash3).
 
