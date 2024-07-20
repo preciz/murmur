@@ -6,3 +6,4 @@ erl_crash.dump
 .elixir_ls
 doc/
 mix.lock
+.aider*
