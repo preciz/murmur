@@ -22,7 +22,7 @@ defmodule Murmur.Mixfile do
       package: package(),
       deps: deps(),
       aliases: aliases(),
-      docs: docs(),
+      docs: docs()
     ]
   end
 
@@ -49,7 +49,7 @@ defmodule Murmur.Mixfile do
 
   defp deps() do
     [
-      {:ex_doc, "~> 0.34", only: [:dev, :docs], runtime: false},
+      {:ex_doc, "~> 0.34", only: [:dev, :docs], runtime: false}
     ]
   end
 
@@ -57,7 +57,7 @@ defmodule Murmur.Mixfile do
     [
       ci: [
         "format --check-formatted",
-        "test",
+        "test"
       ]
     ]
   end
