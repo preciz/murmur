@@ -11,8 +11,8 @@ defmodule Murmur do
       iex> Murmur.hash_x86_128("some random data")
       5586633072055552000169173700229798482
 
-      # hashes of erlang terms may change between erlang versions
-      # iex> Murmur.hash_x64_128([:yes, :you, :can, :use, :any, :erlang, :term!])
+      # hashes of Erlang terms may change between Erlang versions
+      # iex> Murmur.hash_x64_128([:yes, :you, :can, :use, :any, :Erlang, :term!])
       # => 300414073828138369336317731503972665325
 
   """
@@ -45,7 +45,7 @@ defmodule Murmur do
   defmacrop mask_64(x), do: quote(do: unquote(x) &&& 0xFFFFFFFFFFFFFFFF)
 
   @doc """
-  Returns the hashed erlang term `data` using an optional `seed` which defaults to `0`.
+  Returns the hashed Erlang term `data` using an optional `seed` which defaults to `0`.
 
   This function uses the x64 128bit variant.
   """
@@ -95,7 +95,7 @@ defmodule Murmur do
   end
 
   @doc """
-  Returns the hashed erlang term `data` using an optional `seed` which defaults to `0`.
+  Returns the hashed Erlang term `data` using an optional `seed` which defaults to `0`.
 
   This function uses the x86 128bit variant.
   """
