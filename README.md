@@ -33,7 +33,7 @@ iex> Murmur.hash_x64_128([:yes, :you, :can, :use, :any, :erlang, :term!])
 
 # Performance
 
-This implementation is able to achieve the following ips (iterations per second) with a 50 bytes long binary input:
+This implementation achieves the following ips (iterations per second) with a 50-byte long binary input:
 
 ```txt
 CPU Information: AMD Ryzen 7 8845HS w
