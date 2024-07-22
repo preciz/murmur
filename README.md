@@ -30,3 +30,20 @@ iex> Murmur.hash_x86_128("some random data")
 iex> Murmur.hash_x64_128([:yes, :you, :can, :use, :any, :erlang, :term!])
 300414073828138369336317731503972665325
 ```
+
+# Performance
+
+This implementation is able to achieve the following ips (iterations per second) with a 50 bytes long binary input:
+
+```txt
+CPU Information: AMD Ryzen 7 8845HS w
+Number of Available Cores: 16
+Elixir 1.17.2
+Erlang 27.0
+JIT enabled: true
+
+Name                          ips        average  deviation         median         99th %
+Murmur.hash_x86_32      1657.86 K        0.60 μs    ±86.24%        0.59 μs        0.81 μs
+Murmur.hash_x86_128      776.07 K        1.29 μs  ±1061.39%        1.21 μs        1.49 μs
+Murmur.hash_x64_128      496.00 K        2.02 μs   ±459.12%        1.91 μs        2.62 μs
+```
