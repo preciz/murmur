@@ -13,7 +13,7 @@ defmodule Murmur.Mixfile do
       app: :murmur,
       name: "Murmur",
       source_url: @github,
-      homepage_url: nil,
+      homepage_url: @github,
       version: "1.0.3",
       elixir: "~> 1.13",
       build_embedded: Mix.env() == :prod,
@@ -21,7 +21,6 @@ defmodule Murmur.Mixfile do
       description: @description,
       package: package(),
       deps: deps(),
-      aliases: aliases(),
       docs: docs()
     ]
   end
@@ -50,15 +49,6 @@ defmodule Murmur.Mixfile do
   defp deps() do
     [
       {:ex_doc, "~> 0.34", only: [:dev, :docs], runtime: false}
-    ]
-  end
-
-  defp aliases do
-    [
-      ci: [
-        "format --check-formatted",
-        "test"
-      ]
     ]
   end
 end
