@@ -1,5 +1,5 @@
 Mix.install([
-  {:murmur, "~> 1.0"},
+  {:murmur, "~> 2.0"},
   {:benchee, "~> 1.0"}
 ])
 
