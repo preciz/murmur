@@ -13,7 +13,7 @@ Add Murmur as a dependency in your mix.exs file.
 
 ```elixir
 def deps do
-  [{:murmur, "~> 1.0"}]
+  [{:murmur, "~> 2.0"}]
 end
 ```
 
