@@ -3,155 +3,69 @@ defmodule MurmurTest do
   doctest Murmur
   import Murmur
 
-  # x86_32
-
-  test "x86_32 empty" do
+  test "x86_32" do
     assert hash_x86_32("") == 0
-  end
-
-  test "x86_32 empty with seed 1" do
-    assert hash_x86_32("", 1) == 1_364_076_727
-  end
-
-  test "x86_32 default seed arg" do
     assert hash_x86_32("random_stuff") == hash_x86_32("random_stuff", 0)
-  end
-
-  test "x86_32 0" do
-    assert hash_x86_32("0") == 3_530_670_207
-  end
-
-  test "x86_32 01" do
-    assert hash_x86_32("01") == 1_642_882_560
-  end
-
-  test "x86_32 012" do
-    assert hash_x86_32("012") == 3_966_566_284
-  end
-
-  test "x86_32 0123" do
-    assert hash_x86_32("0123") == 3_558_446_240
-  end
-
-  test "x86_32 01234" do
-    assert hash_x86_32("01234") == 433_070_448
-  end
-
-  test "x86_32 huge data" do
-    assert hash_x86_32("b2622f5e1310a0aa14b7f957fe4246fa", 2_147_368_987) == 3_297_211_900
-  end
-
-  test "x86_32 erlang term" do
     assert hash_x86_32(:test)
+
+    [
+      {"", 0, 0},
+      {"", 1, 1_364_076_727},
+      {"0", 0, 3_530_670_207},
+      {"01", 0, 1_642_882_560},
+      {"012", 0, 3_966_566_284},
+      {"0123", 0, 3_558_446_240},
+      {"01234", 0, 433_070_448},
+      {"b2622f5e1310a0aa14b7f957fe4246fa", 2_147_368_987, 3_297_211_900}
+    ]
+    |> Enum.each(fn {data, seed, expected} ->
+      assert hash_x86_32(data, seed) == expected
+    end)
   end
 
-  # x86_128
-
-  test "x86_128 asdfqwer with seed 0" do
-    assert hash_x86_128("asdfqwer", 0) == 0x790584BE55A1E1E58408ECCA8408ECCA
-  end
-
-  test "x86_128 empty" do
+  test "x86_128" do
     assert hash_x86_128("") == 0
-  end
-
-  test "x86_128 empty with seed 1" do
-    assert hash_x86_128("", 1) == 0x88C4ADEC54D201B954D201B954D201B9
-  end
-
-  test "x86_128 default seed arg" do
     assert hash_x86_128("random_stuff") == hash_x86_128("random_stuff", 0)
-  end
-
-  test "x86_128 0" do
-    assert hash_x86_128("0") == 0x0AB2409EA5EB34F8A5EB34F8A5EB34F8
-  end
-
-  test "x86_128 01" do
-    assert hash_x86_128("01") == 0x0F87ACB4674F3B21674F3B21674F3B21
-  end
-
-  test "x86_128 012" do
-    assert hash_x86_128("012") == 0xCD94FEA54C13D78E4C13D78E4C13D78E
-  end
-
-  test "x86_128 0123" do
-    assert hash_x86_128("0123") == 0xDC378FEA485D3536485D3536485D3536
-  end
-
-  test "x86_128 01234" do
-    assert hash_x86_128("01234") == 0x35C5B3EE7B3B211600AE108800AE1088
-  end
-
-  test "x86_128 012345" do
-    assert hash_x86_128("012345") == 0xDB26DC756CE1944BF825536AF825536A
-  end
-
-  test "x86_128 huge data" do
-    assert hash_x86_128("b2622f5e1310a0aa14b7f957fe4246fa", 2_147_368_987) ==
-             0x2435044F7CA7F2CF183E80B51F5FD44C
-  end
-
-  test "x86_128 erlang term" do
     assert hash_x86_128(:test)
+
+    [
+      {"asdfqwer", 0, 175_504_436_512_095_274_433_824_208_945_657_775_294},
+      {"", 0, 0},
+      {"", 1, 112_745_568_952_095_539_304_722_219_991_719_783_916},
+      {"0", 0, 220_543_883_451_499_871_284_187_321_612_475_973_790},
+      {"01", 0, 137_321_874_326_339_305_098_181_565_140_844_391_604},
+      {"012", 0, 101_124_353_311_974_478_471_016_843_751_483_309_733},
+      {"0123", 0, 96_188_378_572_783_053_222_457_303_740_741_816_298},
+      {"01234", 0, 903_794_947_179_251_542_154_595_124_069_643_246},
+      {"012345", 0, 329_842_349_853_404_661_313_702_735_247_573_441_653},
+      {"b2622f5e1310a0aa14b7f957fe4246fa", 2_147_368_987,
+       41_703_641_970_572_727_370_229_238_214_115_525_711}
+    ]
+    |> Enum.each(fn {data, seed, expected} ->
+      assert hash_x86_128(data, seed) == expected
+    end)
   end
 
-  # x64_128
+  test "x64_128" do
+    assert hash_x86_128("") == 0
+    assert hash_x86_128("random_stuff") == hash_x86_128("random_stuff", 0)
+    assert hash_x86_128(:test)
 
-  test "x64_128 0123456 with seed 1000" do
-    assert hash_x64_128("0123456", 1000) == 0x8E6D1CD3E250DA7B42F4BD76D21FE539
-  end
-
-  test "x64_128 0123456789 with seed 1000" do
-    assert hash_x64_128("0123456789", 1000) == 0x72F1651BB10CC77E401A8156169A5CB8
-  end
-
-  test "x64_128 asdfqwer with seed 0" do
-    assert hash_x64_128("asdfqwer", 0) == 0xCB41F064D6D7D367C345E72E8973CD72
-  end
-
-  test "x64_128 empty" do
-    assert hash_x64_128("") == 0
-  end
-
-  test "x64_128 empty with seed 1" do
-    assert hash_x64_128("", 1) == 0x4610ABE56EFF5CB551622DAA78F83583
-  end
-
-  test "x64_128 default seed arg" do
-    assert hash_x64_128("random_stuff") == hash_x64_128("random_stuff", 0)
-  end
-
-  test "x64_128 0" do
-    assert hash_x64_128("0") == 0x2AC9DEBED546A3803A8DE9E53C875E09
-  end
-
-  test "x64_128 01" do
-    assert hash_x64_128("01") == 0x649E4EAA7FC1708EE6945110230F2AD6
-  end
-
-  test "x64_128 012" do
-    assert hash_x64_128("012") == 0xCE68F60D7C353BDB00364CD5936BF18A
-  end
-
-  test "x64_128 0123" do
-    assert hash_x64_128("0123") == 0x0F95757CE7F38254B4C67C9E6F12AB4B
-  end
-
-  test "x64_128 01234" do
-    assert hash_x64_128("01234") == 0x0F04E459497F3FC1ECCC6223A28DD613
-  end
-
-  test "x64_128 012345" do
-    assert hash_x64_128("012345") == 0x88C0A92586BE0A2781062D6137728244
-  end
-
-  test "x64_128 huge data" do
-    assert hash_x64_128("b2622f5e1310a0aa14b7f957fe4246fa", 2_147_368_987) ==
-             0xF982047579BEB692F57653A0620F950B
-  end
-
-  test "x64_128 erlang term" do
-    assert hash_x64_128(:test)
+    [
+      {"asdfqwer", 0, 259_562_416_584_950_860_532_122_463_349_073_498_983},
+      {"", 0, 0},
+      {"", 1, 108_177_238_965_372_658_051_732_455_265_379_769_525},
+      {"0", 0, 77_832_081_575_998_147_576_267_703_913_017_680_768},
+      {"01", 0, 306_492_543_119_272_612_795_719_006_631_500_017_806},
+      {"012", 0, 281_942_414_714_165_914_479_726_705_557_978_075},
+      {"0123", 0, 240_291_641_590_490_688_718_251_893_415_321_240_148},
+      {"01234", 0, 314_759_026_063_816_137_774_093_326_316_203_884_481},
+      {"012345", 0, 171_502_485_648_129_393_034_657_596_489_443_707_431},
+      {"b2622f5e1310a0aa14b7f957fe4246fa", 2_147_368_987,
+       326_275_246_143_462_972_595_823_637_050_028_897_938}
+    ]
+    |> Enum.each(fn {data, seed, expected} ->
+      assert hash_x64_128(data, seed) == expected
+    end)
   end
 end
