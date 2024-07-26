@@ -46,7 +46,7 @@ defmodule Murmur do
   defdelegate hash_x86_128(data, seed), to: Murmur.Hash128X86
 
   @doc """
-  Returns the hashed erlang term `data` using an optional `seed` which defaults to `0`.
+  Returns the hashed Erlang term `data` using an optional `seed` which defaults to `0`.
 
   This function uses the x86 32bit variant.
   """
