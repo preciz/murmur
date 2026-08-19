@@ -14,7 +14,7 @@ defmodule Murmur.Mixfile do
       name: "Murmur",
       source_url: @github,
       homepage_url: @github,
-      version: "2.0.0",
+      version: "2.0.1",
       elixir: "~> 1.13",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,

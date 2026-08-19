@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.1 (2026-08-19)
+
+### Changed
+- Reduced allocations in the 128-bit hash implementations by replacing fixed-size
+  collection pipelines with direct state handling.
+- Improved hashing performance and memory usage with compiler-guided arithmetic
+  optimizations while preserving existing hash results.
+
 ## 2.0.0 (2024-07-26)
 
 ## Breaking changes
