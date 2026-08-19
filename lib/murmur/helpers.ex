@@ -16,24 +16,25 @@ defmodule Murmur.Helpers do
         ) :: non_neg_integer
   def k_32_op(k, c1, rotl, c2) do
     k
-    |> Kernel.*(c1)
-    |> mask_32
+    |> mul32(c1)
     |> rotl32(rotl)
-    |> mask_32
-    |> Kernel.*(c2)
-    |> mask_32
+    |> mul32(c2)
   end
 
   @spec fmix32(non_neg_integer) :: non_neg_integer
   def fmix32(h) do
     h
     |> bxor_and_shift_right(16)
-    |> Kernel.*(0x85EBCA6B)
-    |> mask_32
+    |> mul32(0x85EBCA6B)
     |> bxor_and_shift_right(13)
-    |> Kernel.*(0xC2B2AE35)
-    |> mask_32
+    |> mul32(0xC2B2AE35)
     |> bxor_and_shift_right(16)
+  end
+
+  defp mul32(a, b) do
+    low = (a &&& 0xFFFF) * (b &&& 0xFFFF)
+    cross = (a &&& 0xFFFF) * (b >>> 16) + (a >>> 16) * (b &&& 0xFFFF)
+    mask_32(low + (cross <<< 16))
   end
 
   @spec rotl32(non_neg_integer, non_neg_integer) :: non_neg_integer
@@ -50,11 +51,11 @@ defmodule Murmur.Helpers do
   def k_64_op(k, c1, rotl, c2) do
     k
     |> Kernel.*(c1)
-    |> mask_64
+    |> mask_64()
     |> rotl64(rotl)
-    |> mask_64
+    |> mask_64()
     |> Kernel.*(c2)
-    |> mask_64
+    |> mask_64()
   end
 
   @spec rotl64(non_neg_integer, non_neg_integer) :: non_neg_integer
@@ -65,10 +66,10 @@ defmodule Murmur.Helpers do
     h0
     |> bxor_and_shift_right(33)
     |> Kernel.*(0xFF51AFD7ED558CCD)
-    |> mask_64
+    |> mask_64()
     |> bxor_and_shift_right(33)
     |> Kernel.*(0xC4CEB9FE1A85EC53)
-    |> mask_64
+    |> mask_64()
     |> bxor_and_shift_right(33)
   end
 
