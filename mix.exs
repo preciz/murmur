@@ -42,7 +42,10 @@ defmodule Murmur.Mixfile do
       files: ["lib", "mix.exs", "README.md", "LICENSE"],
       maintainers: ["Barna Kovacs", "Gonçalo Cabrita"],
       licenses: ["MIT"],
-      links: %{"GitHub" => @github}
+      links: %{
+        "GitHub" => @github,
+        "Changelog" => "#{@github}/blob/main/CHANGELOG.md"
+      }
     ]
   end
 
