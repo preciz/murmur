@@ -7,6 +7,7 @@ defmodule Murmur.Mixfile do
   It aims to implement the x86_32bit, x86_128bit and x64_128bit variants.
   """
   @github "https://github.com/preciz/murmur"
+  @version "2.0.1"
 
   def project() do
     [
@@ -14,7 +15,7 @@ defmodule Murmur.Mixfile do
       name: "Murmur",
       source_url: @github,
       homepage_url: @github,
-      version: "2.0.1",
+      version: @version,
       elixir: "~> 1.13",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -33,13 +34,14 @@ defmodule Murmur.Mixfile do
     [
       main: "readme",
       logo: nil,
-      extras: ["README.md"]
+      source_ref: "v#{@version}",
+      extras: ["README.md", "CHANGELOG.md"]
     ]
   end
 
   defp package() do
     [
-      files: ["lib", "mix.exs", "README.md", "LICENSE"],
+      files: ["lib", "mix.exs", "README.md", "CHANGELOG.md", "LICENSE"],
       maintainers: ["Barna Kovacs", "Gonçalo Cabrita"],
       licenses: ["MIT"],
       links: %{
