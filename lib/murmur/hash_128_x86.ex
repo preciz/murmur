@@ -13,48 +13,28 @@ defmodule Murmur.Hash128X86 do
   @n4_32_128 0x32AC3B17
 
   def hash_x86_128(data, seed) when is_binary(data) do
-    hashes =
-      [seed, seed, seed, seed]
-      |> body(data)
-      |> Stream.zip([
-        {15, @c1_32_128, @c2_32_128},
-        {16, @c2_32_128, @c3_32_128},
-        {17, @c3_32_128, @c4_32_128},
-        {18, @c4_32_128, @c1_32_128}
-      ])
-      |> Stream.map(fn {x, {r, a, b}} ->
-        case x do
-          {h, []} ->
-            bxor(h, byte_size(data))
+    {h1, h2, h3, h4, tail} = body(seed, seed, seed, seed, data)
+    {tail1, tail2, tail3, tail4} = split_tail(tail)
+    length = byte_size(data)
 
-          {h, t} ->
-            h
-            |> bxor(
-              t
-              |> swap_uint()
-              |> Kernel.*(a)
-              |> mask_32
-              |> rotl32(r)
-              |> Kernel.*(b)
-              |> mask_32
-              |> bxor(byte_size(data))
-            )
-        end
-      end)
-      |> Enum.to_list()
+    h1 = h1 |> mix_tail(tail1, @c1_32_128, 15, @c2_32_128) |> bxor(length)
+    h2 = h2 |> mix_tail(tail2, @c2_32_128, 16, @c3_32_128) |> bxor(length)
+    h3 = h3 |> mix_tail(tail3, @c3_32_128, 17, @c4_32_128) |> bxor(length)
+    h4 = h4 |> mix_tail(tail4, @c4_32_128, 18, @c1_32_128) |> bxor(length)
 
-    [h1, h2, h3, h4] =
-      hashes
-      |> hash_32_128_intermix
-      |> Enum.map(&fmix32/1)
-      |> hash_32_128_intermix
+    {h1, h2, h3, h4} = hash_32_128_intermix(h1, h2, h3, h4)
+
+    {h1, h2, h3, h4} =
+      hash_32_128_intermix(fmix32(h1), fmix32(h2), fmix32(h3), fmix32(h4))
 
     h4 <<< 96 ||| h3 <<< 64 ||| h2 <<< 32 ||| h1
   end
 
-  @spec body([non_neg_integer], binary) :: [{non_neg_integer, [binary]}]
   defp body(
-         [h1, h2, h3, h4],
+         h1,
+         h2,
+         h3,
+         h4,
          <<k1::size(8)-little-unit(4), k2::size(8)-little-unit(4), k3::size(8)-little-unit(4),
            k4::size(8)-little-unit(4), t::binary>>
        ) do
@@ -70,34 +50,25 @@ defmodule Murmur.Hash128X86 do
     k4 = k_32_op(k4, @c4_32_128, 18, @c1_32_128)
     h4 = h_32_op(h4, k4, 13, h1, 5, @n4_32_128)
 
-    body([h1, h2, h3, h4], t)
+    body(h1, h2, h3, h4, t)
   end
 
-  defp body(
-         [h1, h2, h3, h4],
-         <<t1::size(4)-binary, t2::size(4)-binary, t3::size(4)-binary, t::binary>>
-       ) do
-    [{h1, t1}, {h2, t2}, {h3, t3}, {h4, t}]
-  end
+  defp body(h1, h2, h3, h4, tail), do: {h1, h2, h3, h4, tail}
 
-  defp body([h1, h2, h3, h4], <<t1::size(4)-binary, t2::size(4)-binary, t3::binary>>) do
-    [{h1, t1}, {h2, t2}, {h3, t3}, {h4, []}]
-  end
+  defp split_tail(
+         <<tail1::size(4)-binary, tail2::size(4)-binary, tail3::size(4)-binary, tail4::binary>>
+       ),
+       do: {tail1, tail2, tail3, tail4}
 
-  defp body([h1, h2, h3, h4], <<t1::size(4)-binary, t2::binary>>) do
-    [{h1, t1}, {h2, t2}, {h3, []}, {h4, []}]
-  end
+  defp split_tail(<<tail1::size(4)-binary, tail2::size(4)-binary, tail3::binary>>),
+    do: {tail1, tail2, tail3, ""}
 
-  defp body([h1, h2, h3, h4], t1) when is_binary(t1) and t1 != "" do
-    [{h1, t1}, {h2, []}, {h3, []}, {h4, []}]
-  end
+  defp split_tail(<<tail1::size(4)-binary, tail2::binary>>),
+    do: {tail1, tail2, "", ""}
 
-  defp body([h1, h2, h3, h4], _) do
-    [{h1, []}, {h2, []}, {h3, []}, {h4, []}]
-  end
+  defp split_tail(tail1), do: {tail1, "", "", ""}
 
-  @spec hash_32_128_intermix([non_neg_integer]) :: [non_neg_integer]
-  defp hash_32_128_intermix([h1, h2, h3, h4]) do
+  defp hash_32_128_intermix(h1, h2, h3, h4) do
     h1 =
       h1
       |> Kernel.+(h2)
@@ -111,7 +82,13 @@ defmodule Murmur.Hash128X86 do
     h3 = mask_32(h3 + h1)
     h4 = mask_32(h4 + h1)
 
-    [h1, h2, h3, h4]
+    {h1, h2, h3, h4}
+  end
+
+  defp mix_tail(h, "", _c1, _rotation, _c2), do: h
+
+  defp mix_tail(h, tail, c1, rotation, c2) do
+    bxor(h, k_32_op(swap_uint(tail), c1, rotation, c2))
   end
 
   @spec h_32_op(

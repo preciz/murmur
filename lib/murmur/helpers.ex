@@ -75,70 +75,9 @@ defmodule Murmur.Helpers do
   # General helpers (for both x86 and x64)
 
   @spec swap_uint(binary) :: non_neg_integer
-  def swap_uint(
-        <<v1::size(8), v2::size(8), v3::size(8), v4::size(8), v5::size(8), v6::size(8),
-          v7::size(8), v8::size(8)>>
-      ) do
-    v8 <<< 56
-    |> bxor(v7 <<< 48)
-    |> bxor(v6 <<< 40)
-    |> bxor(v5 <<< 32)
-    |> bxor(v4 <<< 24)
-    |> bxor(v3 <<< 16)
-    |> bxor(v2 <<< 8)
-    |> bxor(v1)
+  def swap_uint(binary) when byte_size(binary) <= 8 do
+    :binary.decode_unsigned(binary, :little)
   end
-
-  def swap_uint(
-        <<v1::size(8), v2::size(8), v3::size(8), v4::size(8), v5::size(8), v6::size(8),
-          v7::size(8)>>
-      ) do
-    v7 <<< 48
-    |> bxor(v6 <<< 40)
-    |> bxor(v5 <<< 32)
-    |> bxor(v4 <<< 24)
-    |> bxor(v3 <<< 16)
-    |> bxor(v2 <<< 8)
-    |> bxor(v1)
-  end
-
-  def swap_uint(<<v1::size(8), v2::size(8), v3::size(8), v4::size(8), v5::size(8), v6::size(8)>>) do
-    v6 <<< 40
-    |> bxor(v5 <<< 32)
-    |> bxor(v4 <<< 24)
-    |> bxor(v3 <<< 16)
-    |> bxor(v2 <<< 8)
-    |> bxor(v1)
-  end
-
-  def swap_uint(<<v1::size(8), v2::size(8), v3::size(8), v4::size(8), v5::size(8)>>) do
-    v5 <<< 32
-    |> bxor(v4 <<< 24)
-    |> bxor(v3 <<< 16)
-    |> bxor(v2 <<< 8)
-    |> bxor(v1)
-  end
-
-  def swap_uint(<<v1::size(8), v2::size(8), v3::size(8), v4::size(8)>>) do
-    v4 <<< 24
-    |> bxor(v3 <<< 16)
-    |> bxor(v2 <<< 8)
-    |> bxor(v1)
-  end
-
-  def swap_uint(<<v1::size(8), v2::size(8), v3::size(8)>>) do
-    v3 <<< 16
-    |> bxor(v2 <<< 8)
-    |> bxor(v1)
-  end
-
-  def swap_uint(<<v1::size(8), v2::size(8)>>) do
-    v2 <<< 8 |> bxor(v1)
-  end
-
-  def swap_uint(<<v1::size(8)>>), do: 0 |> bxor(v1)
-
-  def swap_uint(""), do: 0
 
   @spec bxor_and_shift_right(non_neg_integer, non_neg_integer) :: non_neg_integer
   def bxor_and_shift_right(h, v), do: bxor(h, h >>> v)
