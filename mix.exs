@@ -48,7 +48,7 @@ defmodule Murmur.Mixfile do
 
   defp deps() do
     [
-      {:ex_doc, "~> 0.34", only: [:dev, :docs], runtime: false}
+      {:ex_doc, "~> 0.40", only: [:dev, :docs], runtime: false}
     ]
   end
 end
