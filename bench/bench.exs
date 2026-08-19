@@ -1,5 +1,5 @@
 Mix.install([
-  {:murmur, "~> 2.0"},
+  {:murmur, path: Path.expand("..", __DIR__)},
   {:benchee, "~> 1.0"}
 ])
 
