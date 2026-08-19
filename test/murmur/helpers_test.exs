@@ -27,4 +27,24 @@ defmodule Murmur.HelpersTest do
       assert fmix64(input) == expected
     end)
   end
+
+  test "swap_uint/1 decodes little-endian tails from zero through eight bytes" do
+    bytes = <<1, 2, 3, 4, 5, 6, 7, 8>>
+
+    expected = [
+      0x0,
+      0x01,
+      0x0201,
+      0x030201,
+      0x04030201,
+      0x0504030201,
+      0x060504030201,
+      0x07060504030201,
+      0x0807060504030201
+    ]
+
+    for {value, size} <- Enum.with_index(expected) do
+      assert bytes |> binary_part(0, size) |> swap_uint() == value
+    end
+  end
 end
