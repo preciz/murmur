@@ -38,12 +38,12 @@ This implementation achieves the following ips (iterations per second) with a 50
 ```txt
 CPU Information: AMD Ryzen 7 8845HS w
 Number of Available Cores: 16
-Elixir 1.17.2
-Erlang 27.0
+Elixir 1.20.3
+Erlang 29.0.5
 JIT enabled: true
 
-Name                          ips        average  deviation         median         99th %
-Murmur.hash_x86_32      1657.86 K        0.60 μs    ±86.24%        0.59 μs        0.81 μs
-Murmur.hash_x86_128      776.07 K        1.29 μs  ±1061.39%        1.21 μs        1.49 μs
-Murmur.hash_x64_128      496.00 K        2.02 μs   ±459.12%        1.91 μs        2.62 μs
+Name                   ips        average  deviation         median         99th %
+hash_x86_32         4.18 M      238.96 ns  ±2012.18%         211 ns         331 ns
+hash_x86_128        2.52 M      396.91 ns  ±1137.50%         360 ns         551 ns
+hash_x64_128        0.58 M     1725.26 ns   ±273.65%        1623 ns        3146 ns
 ```
