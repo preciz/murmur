@@ -24,7 +24,7 @@ defmodule Murmur.Hash32X86 do
     |> finalize32()
   end
 
-  @spec body(non_neg_integer, binary) :: {non_neg_integer, [binary] | binary}
+  @spec body(non_neg_integer, binary) :: {non_neg_integer, [] | binary}
   defp body(h0, <<k::32-little, t::binary>>) do
     k1 = mix_k32(k)
 
@@ -37,8 +37,8 @@ defmodule Murmur.Hash32X86 do
     |> body(t)
   end
 
-  defp body(h, t) when byte_size(t) > 0, do: {h, t}
-  defp body(h, _), do: {h, []}
+  defp body(h, ""), do: {h, []}
+  defp body(h, t), do: {h, t}
 
   defp mix_k32(k) do
     k = mul32(k, @c1_32)
