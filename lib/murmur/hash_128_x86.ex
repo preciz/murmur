@@ -76,15 +76,7 @@ defmodule Murmur.Hash128X86 do
   defp split_tail(tail1), do: {tail1, "", "", ""}
 
   defp hash_32_128_intermix(h1, h2, h3, h4) do
-    h1 =
-      h1
-      |> Kernel.+(h2)
-      |> mask_32()
-      |> Kernel.+(h3)
-      |> mask_32()
-      |> Kernel.+(h4)
-      |> mask_32()
-
+    h1 = mask_32(h1 + h2 + h3 + h4)
     h2 = mask_32(h2 + h1)
     h3 = mask_32(h3 + h1)
     h4 = mask_32(h4 + h1)
