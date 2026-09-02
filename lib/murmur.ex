@@ -25,11 +25,13 @@ defmodule Murmur do
   @spec hash_x64_128(binary | term, non_neg_integer) :: non_neg_integer
   def hash_x64_128(data, seed \\ 0)
 
-  def hash_x64_128(data, seed) when not is_binary(data) do
-    hash_x64_128(:erlang.term_to_binary(data), seed)
+  def hash_x64_128(data, seed) when is_binary(data) do
+    Murmur.Hash128X64.hash_x64_128(data, seed)
   end
 
-  defdelegate hash_x64_128(data, seed), to: Murmur.Hash128X64
+  def hash_x64_128(data, seed) do
+    Murmur.Hash128X64.hash_x64_128(:erlang.term_to_binary(data), seed)
+  end
 
   @doc """
   Returns the hashed Erlang term `data` using an optional `seed` which defaults to `0`.
@@ -39,11 +41,13 @@ defmodule Murmur do
   @spec hash_x86_128(binary | term, non_neg_integer) :: non_neg_integer
   def hash_x86_128(data, seed \\ 0)
 
-  def hash_x86_128(data, seed) when not is_binary(data) do
-    hash_x86_128(:erlang.term_to_binary(data), seed)
+  def hash_x86_128(data, seed) when is_binary(data) do
+    Murmur.Hash128X86.hash_x86_128(data, seed)
   end
 
-  defdelegate hash_x86_128(data, seed), to: Murmur.Hash128X86
+  def hash_x86_128(data, seed) do
+    Murmur.Hash128X86.hash_x86_128(:erlang.term_to_binary(data), seed)
+  end
 
   @doc """
   Returns the hashed Erlang term `data` using an optional `seed` which defaults to `0`.
@@ -53,9 +57,11 @@ defmodule Murmur do
   @spec hash_x86_32(binary | term, non_neg_integer) :: non_neg_integer
   def hash_x86_32(data, seed \\ 0)
 
-  def hash_x86_32(data, seed) when not is_binary(data) do
-    hash_x86_32(:erlang.term_to_binary(data), seed)
+  def hash_x86_32(data, seed) when is_binary(data) do
+    Murmur.Hash32X86.hash_x86_32(data, seed)
   end
 
-  defdelegate hash_x86_32(data, seed), to: Murmur.Hash32X86
+  def hash_x86_32(data, seed) do
+    Murmur.Hash32X86.hash_x86_32(:erlang.term_to_binary(data), seed)
+  end
 end
