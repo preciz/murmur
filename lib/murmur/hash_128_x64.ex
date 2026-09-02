@@ -11,7 +11,7 @@ defmodule Murmur.Hash128X64 do
             rotate64: 2,
             mix_k64: 4,
             finalize64: 1,
-            h_64_op: 6,
+            h_64_op: 5,
             hash_64_128_intermix: 2}
 
   def hash_x64_128(data, seed) when is_binary(data) do
@@ -42,10 +42,10 @@ defmodule Murmur.Hash128X64 do
          <<k1::64-little, k2::64-little, t::binary>>
        ) do
     k1 = mix_k64(k1, @c1_64_128, 31, @c2_64_128)
-    h1 = h_64_op(h1, k1, 27, h2, 5, @n1_64_128)
+    h1 = h_64_op(h1, k1, 27, h2, @n1_64_128)
 
     k2 = mix_k64(k2, @c2_64_128, 33, @c1_64_128)
-    h2 = h_64_op(h2, k2, 31, h1, 5, @n2_64_128)
+    h2 = h_64_op(h2, k2, 31, h1, @n2_64_128)
 
     body(h1, h2, t)
   end
@@ -86,15 +86,14 @@ defmodule Murmur.Hash128X64 do
           non_neg_integer,
           non_neg_integer,
           non_neg_integer,
-          non_neg_integer,
           non_neg_integer
         ) :: non_neg_integer
-  defp h_64_op(h1, k, rotl, h2, const, n) do
+  defp h_64_op(h1, k, rotl, h2, n) do
     h1
     |> bxor(k)
     |> rotate64(rotl)
     |> Kernel.+(h2)
-    |> Kernel.*(const)
+    |> Kernel.*(5)
     |> Kernel.+(n)
     |> mask_64()
   end
