@@ -16,13 +16,21 @@ defmodule Murmur.Hash128X86 do
 
   def hash_x86_128(data, seed) when is_binary(data) do
     {h1, h2, h3, h4, tail} = body(seed, seed, seed, seed, data)
-    {tail1, tail2, tail3, tail4} = split_tail(tail)
     length = byte_size(data)
 
-    h1 = h1 |> mix_tail(tail1, @c1_32_128, 15, @c2_32_128) |> bxor(length)
-    h2 = h2 |> mix_tail(tail2, @c2_32_128, 16, @c3_32_128) |> bxor(length)
-    h3 = h3 |> mix_tail(tail3, @c3_32_128, 17, @c4_32_128) |> bxor(length)
-    h4 = h4 |> mix_tail(tail4, @c4_32_128, 18, @c1_32_128) |> bxor(length)
+    {h1, h2, h3, h4} =
+      if tail == "" do
+        {bxor(h1, length), bxor(h2, length), bxor(h3, length), bxor(h4, length)}
+      else
+        {tail1, tail2, tail3, tail4} = split_tail(tail)
+
+        {
+          h1 |> mix_tail(tail1, @c1_32_128, 15, @c2_32_128) |> bxor(length),
+          h2 |> mix_tail(tail2, @c2_32_128, 16, @c3_32_128) |> bxor(length),
+          h3 |> mix_tail(tail3, @c3_32_128, 17, @c4_32_128) |> bxor(length),
+          h4 |> mix_tail(tail4, @c4_32_128, 18, @c1_32_128) |> bxor(length)
+        }
+      end
 
     {h1, h2, h3, h4} = hash_32_128_intermix(h1, h2, h3, h4)
 

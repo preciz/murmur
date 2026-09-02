@@ -11,11 +11,19 @@ defmodule Murmur.Hash128X64 do
 
   def hash_x64_128(data, seed) when is_binary(data) do
     {h1, h2, tail} = body(seed, seed, data)
-    {tail1, tail2} = split_tail(tail)
     length = byte_size(data)
 
-    h1 = h1 |> mix_tail(tail1, @c1_64_128, 31, @c2_64_128) |> bxor(length)
-    h2 = h2 |> mix_tail(tail2, @c2_64_128, 33, @c1_64_128) |> bxor(length)
+    {h1, h2} =
+      if tail == "" do
+        {bxor(h1, length), bxor(h2, length)}
+      else
+        {tail1, tail2} = split_tail(tail)
+
+        {
+          h1 |> mix_tail(tail1, @c1_64_128, 31, @c2_64_128) |> bxor(length),
+          h2 |> mix_tail(tail2, @c2_64_128, 33, @c1_64_128) |> bxor(length)
+        }
+      end
 
     {h1, h2} = hash_64_128_intermix(h1, h2)
     {h1, h2} = hash_64_128_intermix(finalize64(h1), finalize64(h2))
