@@ -34,7 +34,7 @@ defmodule Murmur.Hash128X64 do
   defp body(
          h1,
          h2,
-         <<k1::size(16)-little-unit(4), k2::size(16)-little-unit(4), t::binary>>
+         <<k1::64-little, k2::64-little, t::binary>>
        ) do
     k1 = mix_k64(k1, @c1_64_128, 31, @c2_64_128)
     h1 = h_64_op(h1, k1, 27, h2, 5, @n1_64_128)

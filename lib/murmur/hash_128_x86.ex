@@ -50,8 +50,7 @@ defmodule Murmur.Hash128X86 do
          h2,
          h3,
          h4,
-         <<k1::size(8)-little-unit(4), k2::size(8)-little-unit(4), k3::size(8)-little-unit(4),
-           k4::size(8)-little-unit(4), t::binary>>
+         <<k1::32-little, k2::32-little, k3::32-little, k4::32-little, t::binary>>
        ) do
     k1 = mix_k32(k1, @c1_32_128, 15, @c2_32_128)
     h1 = h_32_op(h1, k1, 19, h2, 5, @n1_32_128)
