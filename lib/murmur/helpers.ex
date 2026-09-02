@@ -8,27 +8,13 @@ defmodule Murmur.Helpers do
 
   # 32 bit helper functions
 
-  @spec k_32_op(
-          non_neg_integer(),
-          597_399_067 | 951_274_213 | 2_716_044_179 | 2_869_860_233 | 3_432_918_353,
-          15 | 16 | 17 | 18,
-          461_845_907 | 597_399_067 | 951_274_213 | 2_716_044_179 | 2_869_860_233
-        ) :: non_neg_integer
-  def k_32_op(k, c1, rotl, c2) do
-    k
-    |> mul32(c1)
-    |> rotl32(rotl)
-    |> mul32(c2)
-  end
+  @compile {:inline, mul32: 2}
 
   @spec fmix32(non_neg_integer) :: non_neg_integer
   def fmix32(h) do
-    h
-    |> bxor_and_shift_right(16)
-    |> mul32(0x85EBCA6B)
-    |> bxor_and_shift_right(13)
-    |> mul32(0xC2B2AE35)
-    |> bxor_and_shift_right(16)
+    h = bxor(h, h >>> 16) |> mul32(0x85EBCA6B)
+    h = bxor(h, h >>> 13) |> mul32(0xC2B2AE35)
+    bxor(h, h >>> 16)
   end
 
   defp mul32(a, b) do
@@ -37,40 +23,13 @@ defmodule Murmur.Helpers do
     mask_32(low + (cross <<< 16))
   end
 
-  @spec rotl32(non_neg_integer, non_neg_integer) :: non_neg_integer
-  def rotl32(x, r), do: mask_32(x <<< r ||| x >>> (32 - r))
-
   # 64 bit helper functions
 
-  @spec k_64_op(
-          non_neg_integer,
-          5_545_529_020_109_919_103 | 9_782_798_678_568_883_157,
-          31 | 33,
-          5_545_529_020_109_919_103 | 9_782_798_678_568_883_157
-        ) :: non_neg_integer
-  def k_64_op(k, c1, rotl, c2) do
-    k
-    |> Kernel.*(c1)
-    |> mask_64()
-    |> rotl64(rotl)
-    |> mask_64()
-    |> Kernel.*(c2)
-    |> mask_64()
-  end
-
-  @spec rotl64(non_neg_integer, non_neg_integer) :: non_neg_integer
-  def rotl64(x, r), do: mask_64(x <<< r ||| x >>> (64 - r))
-
   @spec fmix64(non_neg_integer) :: non_neg_integer
-  def fmix64(h0) do
-    h0
-    |> bxor_and_shift_right(33)
-    |> Kernel.*(0xFF51AFD7ED558CCD)
-    |> mask_64()
-    |> bxor_and_shift_right(33)
-    |> Kernel.*(0xC4CEB9FE1A85EC53)
-    |> mask_64()
-    |> bxor_and_shift_right(33)
+  def fmix64(h) do
+    h = bxor(h, h >>> 33) |> Kernel.*(0xFF51AFD7ED558CCD) |> mask_64()
+    h = bxor(h, h >>> 33) |> Kernel.*(0xC4CEB9FE1A85EC53) |> mask_64()
+    bxor(h, h >>> 33)
   end
 
   # General helpers (for both x86 and x64)
@@ -79,7 +38,4 @@ defmodule Murmur.Helpers do
   def swap_uint(binary) when byte_size(binary) <= 8 do
     :binary.decode_unsigned(binary, :little)
   end
-
-  @spec bxor_and_shift_right(non_neg_integer, non_neg_integer) :: non_neg_integer
-  def bxor_and_shift_right(h, v), do: bxor(h, h >>> v)
 end
