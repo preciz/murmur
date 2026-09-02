@@ -18,7 +18,9 @@ defmodule Murmur.Hash128X86 do
             mix_k32: 4,
             finalize32: 1,
             h_32_op: 5,
-            hash_32_128_intermix: 4}
+            hash_32_128_intermix: 4,
+            split_tail: 1,
+            mix_tail: 5}
 
   def hash_x86_128(data, seed) when is_binary(data) do
     {h1, h2, h3, h4, tail} = body(seed, seed, seed, seed, data)
