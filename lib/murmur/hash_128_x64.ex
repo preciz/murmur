@@ -7,7 +7,12 @@ defmodule Murmur.Hash128X64 do
   @n1_64_128 0x52DCE729
   @n2_64_128 0x38495AB5
 
-  @compile {:inline, mix_k64: 4, finalize64: 1, h_64_op: 6}
+  @compile {:inline,
+            rotate64: 2,
+            mix_k64: 4,
+            finalize64: 1,
+            h_64_op: 6,
+            hash_64_128_intermix: 2}
 
   def hash_x64_128(data, seed) when is_binary(data) do
     {h1, h2, tail} = body(seed, seed, data)
