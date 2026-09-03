@@ -7,7 +7,7 @@ defmodule Murmur.Mixfile do
   It aims to implement the x86_32bit, x86_128bit and x64_128bit variants.
   """
   @github "https://github.com/preciz/murmur"
-  @version "2.0.1"
+  @version "2.0.2"
 
   def project() do
     [

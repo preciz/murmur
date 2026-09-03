@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.2 (2026-09-03)
 
 ### Added
 - Comprehensive test coverage for block and tail boundary vectors (0 to 33 bytes) across all Murmur3 variants.
