@@ -13,23 +13,29 @@ defmodule Murmur.Hash128X64 do
             finalize64: 1,
             h_64_op: 5,
             hash_64_128_intermix: 2,
-            split_tail: 1,
-            mix_tail: 5}
+            mix_tail: 5,
+            mix_tail_k: 5}
 
   def hash_x64_128(data, seed) when is_binary(data) do
     {h1, h2, tail} = body(seed, seed, data)
     length = byte_size(data)
 
     {h1, h2} =
-      if tail == "" do
-        {bxor(h1, length), bxor(h2, length)}
-      else
-        {tail1, tail2} = split_tail(tail)
+      case tail do
+        "" ->
+          {bxor(h1, length), bxor(h2, length)}
 
-        {
-          h1 |> mix_tail(tail1, @c1_64_128, 31, @c2_64_128) |> bxor(length),
-          h2 |> mix_tail(tail2, @c2_64_128, 33, @c1_64_128) |> bxor(length)
-        }
+        <<k1::64-little, tail2::binary>> ->
+          {
+            h1 |> mix_tail_k(k1, @c1_64_128, 31, @c2_64_128) |> bxor(length),
+            h2 |> mix_tail(tail2, @c2_64_128, 33, @c1_64_128) |> bxor(length)
+          }
+
+        tail1 ->
+          {
+            h1 |> mix_tail(tail1, @c1_64_128, 31, @c2_64_128) |> bxor(length),
+            bxor(h2, length)
+          }
       end
 
     {h1, h2} = hash_64_128_intermix(h1, h2)
@@ -54,9 +60,6 @@ defmodule Murmur.Hash128X64 do
 
   defp body(h1, h2, tail), do: {h1, h2, tail}
 
-  defp split_tail(<<tail1::size(8)-binary, tail2::binary>>), do: {tail1, tail2}
-  defp split_tail(tail1), do: {tail1, ""}
-
   defp hash_64_128_intermix(h1, h2) do
     h1 = mask_64(h1 + h2)
     h2 = mask_64(h2 + h1)
@@ -68,6 +71,10 @@ defmodule Murmur.Hash128X64 do
 
   defp mix_tail(h, tail, c1, rotation, c2) do
     bxor(h, mix_k64(:binary.decode_unsigned(tail, :little), c1, rotation, c2))
+  end
+
+  defp mix_tail_k(h, k, c1, rotation, c2) do
+    bxor(h, mix_k64(k, c1, rotation, c2))
   end
 
   defp mix_k64(k, c1, rotation, c2) do
