@@ -31,11 +31,4 @@ defmodule Murmur.Helpers do
     h = bxor(h, h >>> 33) |> Kernel.*(0xC4CEB9FE1A85EC53) |> mask_64()
     bxor(h, h >>> 33)
   end
-
-  # General helpers (for both x86 and x64)
-
-  @spec swap_uint(binary) :: non_neg_integer
-  def swap_uint(binary) when byte_size(binary) <= 8 do
-    :binary.decode_unsigned(binary, :little)
-  end
 end
