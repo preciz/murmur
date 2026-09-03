@@ -1,6 +1,6 @@
 defmodule Murmur.Hash128X64 do
   import Bitwise
-  import Murmur.Helpers
+  import Murmur.Helpers, only: [mask_64: 1]
 
   @c1_64_128 0x87C37B91114253D5
   @c2_64_128 0x4CF5AD432745937F

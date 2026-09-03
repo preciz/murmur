@@ -2,29 +2,17 @@ defmodule Murmur.HelpersTest do
   use ExUnit.Case
   import Murmur.Helpers
 
-  test "fmix32/1" do
-    [
-      {0, 0},
-      {1, 1_364_076_727},
-      {2, 821_347_078},
-      {10, 3_911_517_328},
-      {1000, 1_718_167_128}
-    ]
-    |> Enum.each(fn {input, expected} ->
-      assert fmix32(input) == expected
-    end)
+  test "mask_32/1" do
+    assert mask_32(0) == 0
+    assert mask_32(0xFFFFFFFF) == 0xFFFFFFFF
+    assert mask_32(0x1_00000000) == 0
+    assert mask_32(0x1_FFFFFFFF) == 0xFFFFFFFF
   end
 
-  test "fmix64/1" do
-    [
-      {0, 0},
-      {1, 12_994_781_566_227_106_604},
-      {2, 4_233_148_493_373_801_447},
-      {10, 7_233_188_113_542_599_437},
-      {1000, 12_610_127_409_379_334_721}
-    ]
-    |> Enum.each(fn {input, expected} ->
-      assert fmix64(input) == expected
-    end)
+  test "mask_64/1" do
+    assert mask_64(0) == 0
+    assert mask_64(0xFFFFFFFFFFFFFFFF) == 0xFFFFFFFFFFFFFFFF
+    assert mask_64(0x1_0000000000000000) == 0
+    assert mask_64(0x1_FFFFFFFFFFFFFFFF) == 0xFFFFFFFFFFFFFFFF
   end
 end
